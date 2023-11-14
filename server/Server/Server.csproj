@@ -21,8 +21,4 @@
     <None Include="server\Properties\launchSettings.json" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Providers\" />
-  </ItemGroup>
-
 </Project>

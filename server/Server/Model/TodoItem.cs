@@ -1,9 +1,7 @@
-namespace Server.DbModels;
+namespace Server.Model;
 
-
-public record Todo
+public record TodoItem
 {
-    public required string Id { get; set; } = Guid.NewGuid().ToString();
     public required string Text { get; init; }
     public string? Colour { get; init; }
     public string? Tags { get; init; }

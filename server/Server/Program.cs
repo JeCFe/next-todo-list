@@ -1,3 +1,5 @@
+using Server.Providers;
+
 namespace Server;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -66,6 +68,7 @@ public class Program
             });
         });
         builder.Services.AddAuthorization();
+        builder.Services.AddTransient<ITodoProvider, TodoProvider>();
 
         var app = builder.Build();
         if (app.Configuration.GetValue<bool>("migrateDB"))
