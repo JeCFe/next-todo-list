@@ -1,4 +1,7 @@
+namespace Server;
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Server.Routes;
 
@@ -11,7 +14,9 @@ public class Program
             .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
             .AddJsonFile("appsettings.development.json")
             .Build();
-        
+
+        var dbConnectionString = configuration.GetConnectionString("db");
+
         builder.Services.AddAuthentication(options =>
         {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -20,6 +25,11 @@ public class Program
         {
             options.Authority = configuration["Auth0:Authority"];
             options.Audience = configuration["Auth0:Audience"];
+        });
+
+        builder.Services.AddDbContext<TodoContext>(options =>
+        {
+            options.UseSqlServer(dbConnectionString, b => b.MigrationsAssembly("Server"));
         });
 
         builder.Services.AddHealthChecks();
@@ -58,6 +68,14 @@ public class Program
         builder.Services.AddAuthorization();
 
         var app = builder.Build();
+        if (app.Configuration.GetValue<bool>("migrateDB"))
+        {
+            using (var scope = app.Services.CreateScope())
+            {
+                var dbContext = scope.ServiceProvider.GetRequiredService<TodoContext>();
+                await dbContext.Database.MigrateAsync();
+            }
+        }
         app.UseSwagger();
         app.UseSwaggerUI(c =>
         {
@@ -65,11 +83,11 @@ public class Program
         });
         app.UseCors();
         app.UseAuthentication();
-       app.UseAuthorization();
+        app.UseAuthorization();
 
         app.MapHealthChecks("/healthz");
-        app.MapGroup("/auth").MapAuthEndpoints();
-        
+        app.MapGroup("/todo").MapTodoEndpoints();
+
         app.Run();
     }
 }
