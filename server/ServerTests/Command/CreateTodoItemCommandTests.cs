@@ -2,8 +2,10 @@
 using Bogus;
 using MediatR;
 using Microsoft.Identity.Client;
+using Moq;
 using Server;
 using Server.Commands;
+using Server.Context;
 using ServerTests.Fixtures;
 
 namespace ServerTests;
@@ -20,20 +22,22 @@ public class CreateTodoItemCommandTests : IClassFixture<DbFixture>
     public async Task Successfully_add_new_user_and_todo_item()
     {
         using var context = _fixture.CreateContext();
-        var user = Guid.NewGuid().ToString();
+        var userId = Guid.NewGuid().ToString();
         var text = new Faker().Random.Words();
         var cmd = new CreateTodoItemCommand
         {
-            Text = text,
-            UserId = user
+            Text = text
         };
-        await _fixture.Execute(context, cmd);
+
+        var userContextMock = new Mock<IUserContext>();
+        userContextMock.Setup(x => x.UserId).Returns(userId);
+        await _fixture.Execute(context, cmd, userContextMock.Object);
 
         var newTodo = context.Todos.SingleOrDefault(x => x.Text == text);
-        var addedUser = context.Users.Find(user);
+        var addedUser = context.Users.Find(userId);
 
         Assert.NotNull(addedUser);
-        Assert.Equal(user, addedUser.Id);
+        Assert.Equal(userId, addedUser.Id);
 
         Assert.NotNull(newTodo);
         Assert.Equal(text, newTodo.Text);
@@ -55,11 +59,12 @@ public class CreateTodoItemCommandTests : IClassFixture<DbFixture>
         var text = new Faker().Random.Words();
         var cmd = new CreateTodoItemCommand
         {
-            Text = text,
-            UserId = userId
+            Text = text
         };
 
-        await _fixture.Execute(context, cmd);
+        var userContextMock = new Mock<IUserContext>();
+        userContextMock.Setup(x => x.UserId).Returns(userId);
+        await _fixture.Execute(context, cmd, userContextMock.Object);
 
         var newTodo = context.Todos.FirstOrDefault(x => x.Text == text);
         Assert.NotNull(newTodo);

@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Server.Context;
 using Server.DbModels;
 
 namespace Server.Commands;
@@ -7,15 +8,17 @@ namespace Server.Commands;
 public class CreateTodoItemCommand : ICommand
 {
     public required string Text { get; init; }
-    public required string UserId { get; init; }
     public string? Colour { get; init; }
     public string? Tags { get; init; }
 
-    public async Task Execute(TodoDb context, IPublisher publisher, CancellationToken cancellationToken)
+    public async Task Execute(TodoDb context, IPublisher publisher, IUserContext userContext, CancellationToken cancellationToken)
     {
-        // todo change this to actually pull from Process identity
-
-        var existingUser = await context.Users.FindAsync(new object?[] { UserId }, cancellationToken);
+        var userId = userContext.UserId;
+        if (userId is null)
+        {
+            throw new Exception("User Id is null");
+        }
+        var existingUser = await context.Users.FindAsync(new object?[] { userId }, cancellationToken);
 
         if (existingUser is not null)
         {
@@ -34,7 +37,7 @@ public class CreateTodoItemCommand : ICommand
         {
             var newUser = context.Users.Add(new User()
             {
-                Id = UserId,
+                Id = userId,
             }).Entity;
 
             newUser.Todos.Add(new Todo

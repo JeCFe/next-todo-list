@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Server.Commands;
+using Server.Context;
 using Server.Routes;
 
 public class Program
@@ -31,6 +32,7 @@ public class Program
             options.Authority = configuration["Auth0:Authority"];
             options.Audience = configuration["Auth0:Audience"];
         });
+        builder.Services.AddHttpContextAccessor();
 
         builder.Services.AddDbContext<TodoDb>(options =>
         {
@@ -72,6 +74,7 @@ public class Program
         });
         builder.Services.AddAuthorization();
         builder.Services.AddTransient<ITodoProvider, TodoProvider>();
+        builder.Services.AddScoped<IUserContext, UserContext>();
         builder.Services.AddMediatR(config => config.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly()))
         .RegisterCommandHandlers<TodoDb>();
         builder.Services.AddAutoMapper(typeof(Program));

@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Server.Context;
 
 namespace Server.Commands;
 
@@ -8,15 +9,17 @@ public class CommandHandler<TDBContext, TCommand> : IRequestHandler<TCommand>
 {
     private readonly TDBContext _dbContext;
     private readonly IPublisher _publisher;
-    public CommandHandler(TDBContext dBContext, IPublisher publisher)
+    private readonly IUserContext _userContext;
+    public CommandHandler(TDBContext dBContext, IPublisher publisher, IUserContext userContext)
     {
         _dbContext = dBContext;
         _publisher = publisher;
+        _userContext = userContext;
 
     }
 
     public Task Handle(TCommand request, CancellationToken cancellationToken)
     {
-        return request.Execute(_dbContext, _publisher, cancellationToken);
+        return request.Execute(_dbContext, _publisher, _userContext, cancellationToken);
     }
 }

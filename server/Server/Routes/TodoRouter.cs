@@ -36,8 +36,8 @@ public static class TodoRouter
     public static RouteGroupBuilder MapTodoEndpoints(this RouteGroupBuilder group)
     {
         group.WithTags("Todo");
-        group.MapGet("/items", GetTodos);
-        group.MapPost("/add", AddTodo);
+        group.MapGet("/items", GetTodos).RequireAuthorization();
+        group.MapPost("/add", AddTodo).RequireAuthorization();
         return group;
     }
 }

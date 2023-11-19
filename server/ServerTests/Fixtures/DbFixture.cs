@@ -4,6 +4,7 @@ using Server;
 using Moq;
 using Microsoft.Data.Sqlite;
 using Server.Commands;
+using Server.Context;
 
 namespace ServerTests.Fixtures;
 
@@ -28,9 +29,9 @@ public class DbFixture : IDisposable
 
     public TodoDb CreateContext() => new TodoDb(_contextOptions);
 
-    public Task Execute(TodoDb dbContext, ICommand command)
+    public Task Execute(TodoDb dbContext, ICommand command, IUserContext userContext)
     {
-        return command.Execute(dbContext, _publisher, CancellationToken.None);
+        return command.Execute(dbContext, _publisher, userContext, CancellationToken.None);
     }
 
     public void Dispose()
