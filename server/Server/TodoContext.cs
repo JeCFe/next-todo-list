@@ -26,8 +26,10 @@ public class TodoDb : DbContext
 
         modelBuilder.Entity<Todo>(entity =>
         {
-            entity.HasKey(k => k.Id);
+            entity.HasKey(x => x.Id);
+            entity.Property(x => x.Id).ValueGeneratedOnAdd();
         });
+
         modelBuilder.Entity<User>(e =>
         {
             e.HasKey(k => k.Id);

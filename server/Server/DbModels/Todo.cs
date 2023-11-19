@@ -2,7 +2,7 @@ namespace Server.DbModels;
 
 public record Todo
 {
-    public required string Id { get; set; } = Guid.NewGuid().ToString();
+    public string? Id { get; init; }
     public required string Text { get; init; }
     public string? Colour { get; init; }
     public string? Tags { get; init; }

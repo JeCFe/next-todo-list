@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using Server.Context;
 using Server.DbModels;
 using Server.Model;
 
@@ -5,57 +7,29 @@ namespace Server.Providers;
 
 public class TodoProvider : ITodoProvider
 {
-    public async Task AddTodo(
+    public async Task<List<TodoItem>> GetTodos(
         TodoDb dbContext,
-        string userId,
-        TodoItem todoItem,
+        IUserContext userContext,
         CancellationToken cancellationToken
     )
     {
-        var user = await dbContext.Users.FindAsync(new object?[] { userId }, cancellationToken);
-
-        if (user is not null)
-        {
-            user.Todos.Add(
-                new Todo
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    Text = todoItem.Text,
-                    Colour = todoItem.Colour,
-                    Tags = todoItem.Tags,
-                    Created = new DateTime(),
-                    User = user,
-                    UserId = user.Id
-                }
-            );
-        }
-        else
-        {
-            var newerUser = dbContext.Users.Add(new User() { Id = userId }).Entity;
-            newerUser
-                .Todos
-                .Add(
-                    new Todo
+        //FIXME: Create custom error to return + handle in router
+        //TODO: Return null which would mean 404
+        var userId = userContext.UserId ?? throw new Exception("User Id is null");
+        return await dbContext
+            .Todos
+            .Where(x => x.UserId == userId)
+            .Select(
+                x =>
+                    new TodoItem
                     {
-                        Id = Guid.NewGuid().ToString(),
-                        Text = todoItem.Text,
-                        Colour = todoItem.Colour,
-                        Tags = todoItem.Tags,
-                        Created = new DateTime(),
-                        User = newerUser,
-                        UserId = newerUser.Id
+                        Text = x.Text,
+                        Created = x.Created,
+                        Closed = x.Closed,
+                        Tags = x.Tags,
+                        Colour = x.Colour
                     }
-                );
-        }
-        await dbContext.SaveChangesAsync(cancellationToken);
-    }
-
-    public Task<List<TodoItem>> GetTodos(
-        TodoDb dbContext,
-        string userId,
-        CancellationToken cancellationToken
-    )
-    {
-        throw new NotImplementedException();
+            )
+            .ToListAsync(cancellationToken);
     }
 }

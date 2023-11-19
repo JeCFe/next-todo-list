@@ -18,11 +18,8 @@ public class CreateTodoItemCommand : ICommand
         CancellationToken cancellationToken
     )
     {
-        var userId = userContext.UserId;
-        if (userId is null)
-        {
-            throw new Exception("User Id is null");
-        }
+        //FIXME: Create custom error to return + handle in router
+        var userId = userContext.UserId ?? throw new Exception("User Id is null");
         var existingUser = await context
             .Users
             .FindAsync(new object?[] { userId }, cancellationToken);
@@ -34,7 +31,6 @@ public class CreateTodoItemCommand : ICommand
                 .Add(
                     new()
                     {
-                        Id = Guid.NewGuid().ToString(),
                         Text = Text,
                         Colour = Colour,
                         Tags = Tags,
@@ -53,7 +49,6 @@ public class CreateTodoItemCommand : ICommand
                 .Add(
                     new Todo
                     {
-                        Id = Guid.NewGuid().ToString(),
                         Text = Text,
                         Colour = Colour,
                         Tags = Tags,
