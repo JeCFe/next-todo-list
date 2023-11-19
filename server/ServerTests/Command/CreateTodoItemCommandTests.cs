@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using Bogus;
 using MediatR;
 using Microsoft.Identity.Client;
 using Server;
@@ -16,11 +17,11 @@ public class CreateTodoItemCommandTests : IClassFixture<DbFixture>
     }
 
     [Fact]
-    public async Task Add_new_user_and_todo_item()
+    public async Task Successfully_add_new_user_and_todo_item()
     {
         using var context = _fixture.CreateContext();
         var user = Guid.NewGuid().ToString();
-        var text = "This is a test";
+        var text = new Faker().Random.Words();
         var cmd = new CreateTodoItemCommand
         {
             Text = text,
@@ -28,18 +29,18 @@ public class CreateTodoItemCommandTests : IClassFixture<DbFixture>
         };
         await _fixture.Execute(context, cmd);
 
-        var newTodo = context.Todos.SingleOrDefault(x => x.Id == text);
+        var newTodo = context.Todos.SingleOrDefault(x => x.Text == text);
         var addedUser = context.Users.Find(user);
 
         Assert.NotNull(addedUser);
         Assert.Equal(user, addedUser.Id);
 
         Assert.NotNull(newTodo);
-        Assert.Equal(text, newTodo.Id);
+        Assert.Equal(text, newTodo.Text);
     }
 
     [Fact]
-    public async Task Add_todo_to_existing_user()
+    public async Task Succesfully_add_todo_to_existing_user()
     {
         using var context = _fixture.CreateContext();
         var userId = Guid.NewGuid().ToString();
@@ -49,7 +50,9 @@ public class CreateTodoItemCommandTests : IClassFixture<DbFixture>
             Id = userId
         });
 
-        var text = "This is a test";
+        context.SaveChanges();
+
+        var text = new Faker().Random.Words();
         var cmd = new CreateTodoItemCommand
         {
             Text = text,
@@ -58,9 +61,9 @@ public class CreateTodoItemCommandTests : IClassFixture<DbFixture>
 
         await _fixture.Execute(context, cmd);
 
-        var newTodo = context.Todos.FirstOrDefault(x => x.Id == text);
+        var newTodo = context.Todos.FirstOrDefault(x => x.Text == text);
         Assert.NotNull(newTodo);
-        Assert.Equal(text, newTodo.Id);
+        Assert.Equal(text, newTodo.Text);
 
     }
 }
