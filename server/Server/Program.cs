@@ -2,9 +2,12 @@ using Server.Providers;
 
 namespace Server;
 
+using System.Reflection;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using Server.Commands;
 using Server.Routes;
 
 public class Program
@@ -29,7 +32,7 @@ public class Program
             options.Audience = configuration["Auth0:Audience"];
         });
 
-        builder.Services.AddDbContext<TodoContext>(options =>
+        builder.Services.AddDbContext<TodoDb>(options =>
         {
             options.UseSqlServer(dbConnectionString, b => b.MigrationsAssembly("Server"));
         });
@@ -69,13 +72,16 @@ public class Program
         });
         builder.Services.AddAuthorization();
         builder.Services.AddTransient<ITodoProvider, TodoProvider>();
+        builder.Services.AddMediatR(config => config.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly()))
+        .RegisterCommandHandlers<TodoDb>();
+        builder.Services.AddAutoMapper(typeof(Program));
 
         var app = builder.Build();
         if (app.Configuration.GetValue<bool>("migrateDB"))
         {
             using (var scope = app.Services.CreateScope())
             {
-                var dbContext = scope.ServiceProvider.GetRequiredService<TodoContext>();
+                var dbContext = scope.ServiceProvider.GetRequiredService<TodoDb>();
                 await dbContext.Database.MigrateAsync();
             }
         }

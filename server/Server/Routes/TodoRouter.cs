@@ -1,6 +1,7 @@
 using System.Security.Claims;
+using MediatR;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Server.Model;
+using Server.Commands;
 using Server.Providers;
 
 namespace Server.Routes;
@@ -14,23 +15,29 @@ public static class TodoRouter
         return TypedResults.Ok(userId);
     }
 
-    private static Ok AddTodo(
-        HttpContext context, 
-        TodoItem todoItem, 
-        ITodoProvider todoProvider,
-        TodoContext dbContext,
+    private static async Task<Ok> AddTodo(
+        HttpContext context, // todo remove this in favour of process ident
+        CreateTodoItemCommand command,
+        IMediator mediator,
         CancellationToken cancellationToken)
     {
-        var userId = context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        var a = todoProvider.AddTodo(dbContext, userId!, todoItem, cancellationToken);
+        try
+        {
+            await mediator.Send(command, cancellationToken);
+            return TypedResults.Ok();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
         return TypedResults.Ok();
     }
 
     public static RouteGroupBuilder MapTodoEndpoints(this RouteGroupBuilder group)
     {
         group.WithTags("Todo");
-        group.MapGet("/items", GetTodos).RequireAuthorization();
-        group.MapPost("/add", AddTodo).RequireAuthorization();
+        group.MapGet("/items", GetTodos);
+        group.MapPost("/add", AddTodo);
         return group;
     }
 }
