@@ -9,4 +9,6 @@ public record Todo
     public string? Tags { get; init; }
     public required DateTime Created { get; init; }
     public DateTime? Closed { get; init; }
+    public required string UserId { get; set; }
+    public required User User { get; set; }
 }

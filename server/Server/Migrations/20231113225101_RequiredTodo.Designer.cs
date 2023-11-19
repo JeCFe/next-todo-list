@@ -11,7 +11,7 @@ using Server;
 
 namespace Server.Migrations
 {
-    [DbContext(typeof(TodoContext))]
+    [DbContext(typeof(TodoDb))]
     [Migration("20231113225101_RequiredTodo")]
     partial class RequiredTodo
     {

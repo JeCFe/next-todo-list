@@ -4,20 +4,25 @@ using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Server.DbModels;
 
-public class TodoContext : DbContext
+public class TodoDb : DbContext
 {
     public DbSet<User> Users { get; set; }
     public DbSet<Todo> Todos { get; set; }
 
-    public TodoContext() { }
+    public TodoDb() { }
 
-    public TodoContext(DbContextOptions<TodoContext> options) : base(options)
+    public TodoDb(DbContextOptions<TodoDb> options) : base(options)
     {
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
+        modelBuilder.Entity<User>()
+            .HasMany(user => user.Todos)
+            .WithOne(todo => todo.User)
+            .HasForeignKey(todo => todo.UserId);
 
         modelBuilder.Entity<Todo>(entity =>
         {
