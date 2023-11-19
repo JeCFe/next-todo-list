@@ -10,12 +10,12 @@ public class CommandHandler<TDBContext, TCommand> : IRequestHandler<TCommand>
     private readonly TDBContext _dbContext;
     private readonly IPublisher _publisher;
     private readonly IUserContext _userContext;
+
     public CommandHandler(TDBContext dBContext, IPublisher publisher, IUserContext userContext)
     {
         _dbContext = dBContext;
         _publisher = publisher;
         _userContext = userContext;
-
     }
 
     public Task Handle(TCommand request, CancellationToken cancellationToken)

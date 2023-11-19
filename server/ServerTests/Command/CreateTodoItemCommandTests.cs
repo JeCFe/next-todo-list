@@ -13,6 +13,7 @@ namespace ServerTests;
 public class CreateTodoItemCommandTests : IClassFixture<DbFixture>
 {
     private readonly DbFixture _fixture;
+
     public CreateTodoItemCommandTests(DbFixture fixture)
     {
         _fixture = fixture;
@@ -24,10 +25,7 @@ public class CreateTodoItemCommandTests : IClassFixture<DbFixture>
         using var context = _fixture.CreateContext();
         var userId = Guid.NewGuid().ToString();
         var text = new Faker().Random.Words();
-        var cmd = new CreateTodoItemCommand
-        {
-            Text = text
-        };
+        var cmd = new CreateTodoItemCommand { Text = text };
 
         var userContextMock = new Mock<IUserContext>();
         userContextMock.Setup(x => x.UserId).Returns(userId);
@@ -49,18 +47,12 @@ public class CreateTodoItemCommandTests : IClassFixture<DbFixture>
         using var context = _fixture.CreateContext();
         var userId = Guid.NewGuid().ToString();
 
-        context.Users.Add(new()
-        {
-            Id = userId
-        });
+        context.Users.Add(new() { Id = userId });
 
         context.SaveChanges();
 
         var text = new Faker().Random.Words();
-        var cmd = new CreateTodoItemCommand
-        {
-            Text = text
-        };
+        var cmd = new CreateTodoItemCommand { Text = text };
 
         var userContextMock = new Mock<IUserContext>();
         userContextMock.Setup(x => x.UserId).Returns(userId);
@@ -69,6 +61,5 @@ public class CreateTodoItemCommandTests : IClassFixture<DbFixture>
         var newTodo = context.Todos.FirstOrDefault(x => x.Text == text);
         Assert.NotNull(newTodo);
         Assert.Equal(text, newTodo.Text);
-
     }
 }

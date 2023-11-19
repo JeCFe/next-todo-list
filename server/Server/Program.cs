@@ -23,60 +23,89 @@ public class Program
 
         var dbConnectionString = configuration.GetConnectionString("db");
 
-        builder.Services.AddAuthentication(options =>
-        {
-            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        }).AddJwtBearer(options =>
-        {
-            options.Authority = configuration["Auth0:Authority"];
-            options.Audience = configuration["Auth0:Audience"];
-        });
+        builder
+            .Services
+            .AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.Authority = configuration["Auth0:Authority"];
+                options.Audience = configuration["Auth0:Audience"];
+            });
         builder.Services.AddHttpContextAccessor();
 
-        builder.Services.AddDbContext<TodoDb>(options =>
-        {
-            options.UseSqlServer(dbConnectionString, b => b.MigrationsAssembly("Server"));
-        });
+        builder
+            .Services
+            .AddDbContext<TodoDb>(options =>
+            {
+                options.UseSqlServer(dbConnectionString, b => b.MigrationsAssembly("Server"));
+            });
 
         builder.Services.AddHealthChecks();
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen(options =>
-        {
-            options.SwaggerDoc("v1", new OpenApiInfo { Version = "0.1.0", Title = "Backend Service" });
-            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+        builder
+            .Services
+            .AddSwaggerGen(options =>
             {
-                Name = "Authorization",
-                Description = "JWT Authorization header using the Bearer scheme",
-                In = ParameterLocation.Header,
-                Type = SecuritySchemeType.Http,
-                Scheme = "bearer",
-                Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
-            });
-
-            options.AddSecurityRequirement(new OpenApiSecurityRequirement
-            {
-                {
+                options.SwaggerDoc(
+                    "v1",
+                    new OpenApiInfo { Version = "0.1.0", Title = "Backend Service" }
+                );
+                options.AddSecurityDefinition(
+                    "Bearer",
                     new OpenApiSecurityScheme
                     {
-                        Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
-                    },
-                    new string[] { }
-                }
+                        Name = "Authorization",
+                        Description = "JWT Authorization header using the Bearer scheme",
+                        In = ParameterLocation.Header,
+                        Type = SecuritySchemeType.Http,
+                        Scheme = "bearer",
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    }
+                );
+
+                options.AddSecurityRequirement(
+                    new OpenApiSecurityRequirement
+                    {
+                        {
+                            new OpenApiSecurityScheme
+                            {
+                                Reference = new OpenApiReference
+                                {
+                                    Type = ReferenceType.SecurityScheme,
+                                    Id = "Bearer"
+                                }
+                            },
+                            new string[] { }
+                        }
+                    }
+                );
             });
-        });
-        builder.Services.AddCors(options =>
-        {
-            options.AddDefaultPolicy(policy =>
+        builder
+            .Services
+            .AddCors(options =>
             {
-                policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+                options.AddDefaultPolicy(policy =>
+                {
+                    policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+                });
             });
-        });
         builder.Services.AddAuthorization();
         builder.Services.AddTransient<ITodoProvider, TodoProvider>();
         builder.Services.AddScoped<IUserContext, UserContext>();
-        builder.Services.AddMediatR(config => config.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly()))
-        .RegisterCommandHandlers<TodoDb>();
+        builder
+            .Services
+            .AddMediatR(
+                config => config.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly())
+            )
+            .RegisterCommandHandlers<TodoDb>();
         builder.Services.AddAutoMapper(typeof(Program));
 
         var app = builder.Build();

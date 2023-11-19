@@ -1,8 +1,8 @@
 ﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
-using Server;
-using Moq;
 using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
+using Moq;
+using Server;
 using Server.Commands;
 using Server.Context;
 
@@ -10,7 +10,6 @@ namespace ServerTests.Fixtures;
 
 public class DbFixture : IDisposable
 {
-
     protected readonly SqliteConnection _connection;
     protected readonly DbContextOptions<TodoDb> _contextOptions;
     private readonly IPublisher _publisher = new Mock<IMediator>().Object;
@@ -20,9 +19,7 @@ public class DbFixture : IDisposable
         _connection = new SqliteConnection("Filename=:memory:");
         _connection.Open();
 
-        _contextOptions = new DbContextOptionsBuilder<TodoDb>()
-            .UseSqlite(_connection)
-            .Options;
+        _contextOptions = new DbContextOptionsBuilder<TodoDb>().UseSqlite(_connection).Options;
         using var context = new TodoDb(_contextOptions);
         context.Database.EnsureCreated();
     }
@@ -40,4 +37,3 @@ public class DbFixture : IDisposable
         GC.SuppressFinalize(this);
     }
 }
-

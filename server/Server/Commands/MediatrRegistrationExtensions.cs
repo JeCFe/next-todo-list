@@ -5,7 +5,7 @@ namespace Server.Commands;
 public static class MediatrRegistrationExtensions
 {
     public static void RegisterCommandHandlers<TDbContext>(this IServiceCollection services)
-where TDbContext : TodoDb
+        where TDbContext : TodoDb
     {
         foreach (var (type, response) in GetCommands<TDbContext>())
         {
@@ -30,15 +30,15 @@ where TDbContext : TodoDb
 
             foreach (var ginterface in item.GetInterfaces().Where(x => x.IsGenericType))
             {
-                if (ginterface.GetGenericTypeDefinition() == typeof(ICommand<>)
-                && ginterface.GenericTypeArguments[0] == typeof(TDbContext))
+                if (
+                    ginterface.GetGenericTypeDefinition() == typeof(ICommand<>)
+                    && ginterface.GenericTypeArguments[0] == typeof(TDbContext)
+                )
                 {
                     yield return (item, null);
                 }
                 continue;
             }
-
         }
     }
 }
-

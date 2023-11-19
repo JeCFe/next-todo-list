@@ -8,8 +8,11 @@ namespace Server.Routes;
 
 public static class TodoRouter
 {
-
-    private static Ok<string> GetTodos(HttpContext context, ITodoProvider todoProvider, CancellationToken cancellationToken)
+    private static Ok<string> GetTodos(
+        HttpContext context,
+        ITodoProvider todoProvider,
+        CancellationToken cancellationToken
+    )
     {
         var userId = context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         return TypedResults.Ok(userId);
@@ -19,7 +22,8 @@ public static class TodoRouter
         HttpContext context, // todo remove this in favour of process ident
         CreateTodoItemCommand command,
         IMediator mediator,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken
+    )
     {
         try
         {
