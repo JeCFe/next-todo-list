@@ -15,41 +15,37 @@ public class CreateTodoItemCommand : ICommand
     {
         // todo change this to actually pull from Process identity
 
-        var user = await context.Users.FindAsync(new object?[] { UserId }, cancellationToken);
+        var existingUser = await context.Users.FindAsync(new object?[] { UserId }, cancellationToken);
 
-        if (user is not null)
+        if (existingUser is not null)
         {
-            var todoItems = user.Todos;
-
-            todoItems.Add(new()
+            existingUser.Todos.Add(new()
             {
                 Id = Guid.NewGuid().ToString(),
                 Text = Text,
                 Colour = Colour,
                 Tags = Tags,
                 Created = new DateTime(),
-                User = user,
-                UserId = user.Id
+                User = existingUser,
+                UserId = existingUser.Id
             });
-
-            user.Todos = todoItems;
         }
         else
         {
-            var newerUser = context.Users.Add(new User()
+            var newUser = context.Users.Add(new User()
             {
                 Id = UserId,
             }).Entity;
 
-            newerUser.Todos.Add(new Todo
+            newUser.Todos.Add(new Todo
             {
                 Id = Guid.NewGuid().ToString(),
                 Text = Text,
                 Colour = Colour,
                 Tags = Tags,
                 Created = new DateTime(),
-                User = newerUser,
-                UserId = newerUser.Id
+                User = newUser,
+                UserId = newUser.Id
             });
 
         }
