@@ -1,35 +1,38 @@
 using Microsoft.EntityFrameworkCore;
 using Server.Context;
-using Server.DbModels;
+using Server.Exceptions;
 using Server.Model;
 
 namespace Server.Providers;
 
 public class TodoProvider : ITodoProvider
 {
-    public async Task<List<TodoItem>> GetTodos(
-        TodoDb dbContext,
-        IUserContext userContext,
-        CancellationToken cancellationToken
-    )
+    private readonly TodoDb _dbContext;
+    private readonly IUserContext _userContext;
+
+    public TodoProvider(TodoDb dbContext, IUserContext userContext)
     {
-        //FIXME: Create custom error to return + handle in router
-        //TODO: Return null which would mean 404
-        var userId = userContext.UserId ?? throw new Exception("User Id is null");
-        return await dbContext
-            .Todos
-            .Where(x => x.UserId == userId)
-            .Select(
-                x =>
-                    new TodoItem
-                    {
-                        Text = x.Text,
-                        Created = x.Created,
-                        Closed = x.Closed,
-                        Tags = x.Tags,
-                        Colour = x.Colour
-                    }
-            )
-            .ToListAsync(cancellationToken);
+        _dbContext = dbContext;
+        _userContext = userContext;
+    }
+
+    public async Task<List<TodoItem>> GetTodos(CancellationToken cancellationToken)
+    {
+        var userId = _userContext.UserId ?? throw new InvalidUserException();
+        return await _dbContext
+                .Todos
+                .Where(x => x.UserId == userId)
+                .Select(
+                    x =>
+                        new TodoItem
+                        {
+                            Text = x.Text,
+                            Created = x.Created,
+                            Closed = x.Closed,
+                            Tags = x.Tags,
+                            Colour = x.Colour
+                        }
+                )
+                .ToListAsync(cancellationToken) ?? new List<TodoItem>();
     }
 }

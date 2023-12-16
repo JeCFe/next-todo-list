@@ -1,7 +1,7 @@
 ﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Server.Context;
 using Server.DbModels;
+using Server.Exceptions;
 
 namespace Server.Commands;
 
@@ -18,8 +18,7 @@ public class CreateTodoItemCommand : ICommand
         CancellationToken cancellationToken
     )
     {
-        //FIXME: Create custom error to return + handle in router
-        var userId = userContext.UserId ?? throw new Exception("User Id is null");
+        var userId = userContext.UserId ?? throw new InvalidUserException();
         var existingUser = await context
             .Users
             .FindAsync(new object?[] { userId }, cancellationToken);
@@ -34,7 +33,7 @@ public class CreateTodoItemCommand : ICommand
                         Text = Text,
                         Colour = Colour,
                         Tags = Tags,
-                        Created = new DateTime(),
+                        Created = DateTime.UtcNow,
                         User = existingUser,
                         UserId = existingUser.Id
                     }

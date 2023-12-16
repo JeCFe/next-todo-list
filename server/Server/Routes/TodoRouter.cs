@@ -1,24 +1,30 @@
-using System.Security.Claims;
 using MediatR;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Server.Commands;
+using Server.Exceptions;
+using Server.Model;
 using Server.Providers;
 
 namespace Server.Routes;
 
 public static class TodoRouter
 {
-    private static Ok<string> GetTodos(
-        HttpContext context,
+    private static async Task<Results<Ok<List<TodoItem>>, ForbidHttpResult>> GetTodos(
         ITodoProvider todoProvider,
         CancellationToken cancellationToken
     )
     {
-        var userId = context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        return TypedResults.Ok(userId);
+        try
+        {
+            return TypedResults.Ok(await todoProvider.GetTodos(cancellationToken));
+        }
+        catch (InvalidUserException)
+        {
+            return TypedResults.Forbid();
+        }
     }
 
-    private static async Task<Ok> AddTodo(
+    private static async Task<Results<Ok, ForbidHttpResult>> AddTodo(
         HttpContext context, // todo remove this in favour of process ident
         CreateTodoItemCommand command,
         IMediator mediator,
@@ -30,11 +36,10 @@ public static class TodoRouter
             await mediator.Send(command, cancellationToken);
             return TypedResults.Ok();
         }
-        catch (Exception ex)
+        catch (InvalidUserException)
         {
-            Console.WriteLine(ex);
+            return TypedResults.Forbid();
         }
-        return TypedResults.Ok();
     }
 
     public static RouteGroupBuilder MapTodoEndpoints(this RouteGroupBuilder group)
