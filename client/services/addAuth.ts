@@ -1,8 +1,8 @@
 import { Middleware } from "openapi-typescript-fetch";
-import { getAuthToken } from "./getAuthToken";
 
 export const addAuth = (): Middleware => async (url, init, next) => {
-  const token = await getAuthToken();
-  init.headers.append("Authorization", `Bearer ${token}`);
+  const response = await fetch("/api/protected");
+  const tokenData = await response.json();
+  init.headers.append("Authorization", `Bearer ${tokenData}`);
   return next(url, init);
 };
