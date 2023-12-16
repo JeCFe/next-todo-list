@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { UserProvider } from "@auth0/nextjs-auth0/client";
-
-const inter = Inter({ subsets: ["latin"] });
+import { Header } from "@/components";
 
 export const metadata: Metadata = {
   title: "Auth0 Client",
@@ -17,7 +16,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <UserProvider>
-        <body className={inter.className}>{children}</body>
+        <body className="bg-white font-mono">
+          <Header />
+          {children}
+        </body>
       </UserProvider>
     </html>
   );
