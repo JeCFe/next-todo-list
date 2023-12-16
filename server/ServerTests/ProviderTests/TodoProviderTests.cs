@@ -77,16 +77,12 @@ public class TodoProviderTests : IClassFixture<DbFixture>
 
         context.SaveChanges();
 
-        var todoProvider = new TodoProvider();
+        var todoProvider = new TodoProvider(context, userContextMock.Object);
 
-        var todoItems = await todoProvider.GetTodos(
-            context,
-            userContextMock.Object,
-            CancellationToken.None
-        );
+        var todoItems = await todoProvider.GetTodos(CancellationToken.None);
 
         Assert.Equal(2, todoItems.Count);
-        Assert.Contains("This is user 1 todo 1", todoItems[0].Text);
-        Assert.Contains("This is user 1 todo 2", todoItems[1].Text);
+        Assert.NotNull(todoItems.SingleOrDefault(x => x.Text == "This is user 1 todo 1"));
+        Assert.NotNull(todoItems.SingleOrDefault(x => x.Text == "This is user 1 todo 2"));
     }
 }
