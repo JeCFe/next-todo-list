@@ -20,6 +20,7 @@
     "swr": "^2.2.4"
   },
   "devDependencies": {
+    "@svgr/webpack": "^8.1.0",
     "@testing-library/jest-dom": "^6.1.4",
     "@testing-library/react": "^14.1.0",
     "@types/node": "^20",
