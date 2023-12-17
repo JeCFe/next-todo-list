@@ -2,10 +2,8 @@
 import { useGetTodos } from "@/hooks/useGetTodos";
 
 import { getApiClient } from "../services";
-import { ArrowDown, ArrowUp, Delete } from "@/components";
-import { useEffect, useMemo } from "react";
-
-const issue = getApiClient().path("/todo/add").method("post").create();
+import { ArrowDown, ArrowUp, Delete, AddItem } from "@/components";
+import { useMemo } from "react";
 
 export default function Home() {
   const { data, isLoading: todoLoading, error: todoError } = useGetTodos();
@@ -49,7 +47,8 @@ export default function Home() {
   if (todoLoading) return <div>Loading...</div>;
   else if (data === undefined) return <div>No todos. Why not create one?</div>;
   return (
-    <div className="container mx-auto">
+    <div className="container mx-auto space-y-2">
+      <AddItem />
       <div className="flex flex-col md:flex-row md:space-x-2 space-y-2 md:space-y-0 ">
         <div className="flex flex-row md:flex-col space-x-2 md:space-x-0 md:space-y-2">
           <div className="flex flex-col border border-black rounded-xl p-2 space-y-2 w-1/2 md:w-fit">
