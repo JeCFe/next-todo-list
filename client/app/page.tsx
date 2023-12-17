@@ -5,12 +5,23 @@ import { getApiClient } from "../services";
 import { ArrowDown, ArrowUp, Delete, AddItem } from "@/components";
 import { useMemo } from "react";
 
+const deleteTodo = getApiClient().path("/todo/delete").method("post").create();
+
 export default function Home() {
-  const { data, isLoading: todoLoading, error: todoError } = useGetTodos();
+  const { data, isLoading: todoLoading, mutate } = useGetTodos();
 
   const filteredTodos = useMemo(() => {
-    return data;
+    return data === undefined ? undefined : data.filter((x) => !x.closed);
   }, [data]); // sets up the memo for filters
+
+  const sortedTodos = useMemo(() => {
+    if (filteredTodos === undefined) {
+      return undefined;
+    }
+    return filteredTodos.sort(
+      (a, b) => new Date(a.created!).getTime() - new Date(b.created!).getTime()
+    );
+  }, [filteredTodos]);
 
   const filterTags = useMemo(() => {
     if (!filteredTodos) {
@@ -45,7 +56,6 @@ export default function Home() {
   }, [filteredTodos]);
 
   if (todoLoading) return <div>Loading...</div>;
-  else if (data === undefined) return <div>No todos. Why not create one?</div>;
   return (
     <div className="container mx-auto space-y-2">
       <AddItem />
@@ -71,22 +81,36 @@ export default function Home() {
         </div>
 
         <div className="flex w-full h-fit flex-col space-y-4 border border-black rounded-xl p-4">
-          {data.map((todo, index) => (
-            <div
-              key={index}
-              className="flex items-center space-x-4 border rounded-xl border-grey-600 p-4"
-            >
-              <div className="flex flex-col">
-                {index !== 0 && <ArrowUp />}
-                {index !== data.length - 1 && <ArrowDown />}
-              </div>
-              <div className="flex w-full">{todo.text}</div>
+          {sortedTodos === undefined || sortedTodos.length === 0 ? (
+            <div>{`This feels lonely :( why don't you add a few todos`}</div>
+          ) : (
+            sortedTodos.map((todo, index) => (
+              <div
+                key={index}
+                className="flex items-center space-x-4 border rounded-xl border-grey-600 p-4"
+              >
+                <div className="flex flex-col">
+                  {index !== 0 && <ArrowUp />}
+                  {index !== sortedTodos.length - 1 && <ArrowDown />}
+                </div>
+                <div className="flex w-full">{todo.text}</div>
 
-              <div className="mr-2">
-                <Delete className="fill-red-500 w-8" />
+                <div
+                  className="mr-2"
+                  onClick={() => {
+                    deleteTodo({
+                      text: todo.text,
+                      created: todo.created,
+                      version: todo.version,
+                    });
+                    mutate();
+                  }}
+                >
+                  <Delete className="fill-red-500 w-8 hover:fill-red-800 hover:cursor-pointer transition duration-200 ease-in-out" />
+                </div>
               </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </div>
     </div>

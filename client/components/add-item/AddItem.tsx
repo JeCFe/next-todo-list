@@ -13,12 +13,15 @@ export const AddItem = () => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<Inputs>();
+
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     console.log(data);
     await issue({ text: data.text });
     mutate();
+    reset();
   };
   return (
     <div className="border border-black rounded-xl p-2 w-full">
@@ -32,7 +35,7 @@ export const AddItem = () => {
 
           <button
             type="submit"
-            className="flex border border-black rounded-xl p-2 space-y-2 w-1/2 md:w-1/5 h-16 items-center justify-center bg-pink-100 hover:bg-pink-200 focus:ring-red-300 focus:ring-2"
+            className="flex border border-black rounded-xl p-2 space-y-2 w-1/2 md:w-1/5 h-16 items-center justify-center bg-pink-100 hover:bg-pink-200 focus:ring-red-300 focus:ring-2 transition duration-300 ease-in-out"
           >
             Add
           </button>
