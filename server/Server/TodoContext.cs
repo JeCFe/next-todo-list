@@ -26,8 +26,17 @@ public class TodoDb : DbContext
 
         modelBuilder.Entity<Todo>(entity =>
         {
-            entity.HasKey(x => x.Id);
-            entity.Property(x => x.Id).ValueGeneratedOnAdd();
+            entity.HasKey(
+                x =>
+                    new
+                    {
+                        x.Text,
+                        x.Created,
+                        x.UserId
+                    }
+            );
+
+            entity.Property(x => x.Version).IsConcurrencyToken();
         });
 
         modelBuilder.Entity<User>(e =>

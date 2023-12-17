@@ -25,7 +25,6 @@ public static class TodoRouter
     }
 
     private static async Task<Results<Ok, ForbidHttpResult>> AddTodo(
-        HttpContext context, // todo remove this in favour of process ident
         CreateTodoItemCommand command,
         IMediator mediator,
         CancellationToken cancellationToken
@@ -42,11 +41,39 @@ public static class TodoRouter
         }
     }
 
+    private static async Task<
+        Results<Ok, ForbidHttpResult, NotFound, BadRequest<string>>
+    > DeleteTodo(
+        DeleteTodoItemCommand command,
+        IMediator mediator,
+        CancellationToken cancellationToken
+    )
+    {
+        try
+        {
+            await mediator.Send(command, cancellationToken);
+            return TypedResults.Ok();
+        }
+        catch (InvalidUserException)
+        {
+            return TypedResults.Forbid();
+        }
+        catch (TodoNotFound)
+        {
+            return TypedResults.NotFound();
+        }
+        catch (InvalidVersion error)
+        {
+            return TypedResults.BadRequest(error.Message);
+        }
+    }
+
     public static RouteGroupBuilder MapTodoEndpoints(this RouteGroupBuilder group)
     {
         group.WithTags("Todo");
         group.MapGet("/items", GetTodos).RequireAuthorization();
         group.MapPost("/add", AddTodo).RequireAuthorization();
+        group.MapPost("/delete", DeleteTodo).RequireAuthorization();
         return group;
     }
 }

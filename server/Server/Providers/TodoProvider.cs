@@ -30,7 +30,8 @@ public class TodoProvider : ITodoProvider
                             Created = x.Created,
                             Closed = x.Closed,
                             Tags = x.Tags,
-                            Colour = x.Colour
+                            Colour = x.Colour,
+                            Version = x.Version.ToString()
                         }
                 )
                 .ToListAsync(cancellationToken) ?? new List<TodoItem>();

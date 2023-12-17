@@ -1,10 +1,4 @@
-﻿using System.Drawing;
-using Bogus;
-using MediatR;
-using Microsoft.Identity.Client;
-using Moq;
-using Server;
-using Server.Commands;
+﻿using Moq;
 using Server.Context;
 using Server.DbModels;
 using Server.Providers;
@@ -46,14 +40,16 @@ public class TodoProviderTests : IClassFixture<DbFixture>
                 Text = "This is user 1 todo 1",
                 Created = DateTime.UtcNow,
                 User = user1,
-                UserId = user1.Id
+                UserId = user1.Id,
+                Version = 1
             },
             new()
             {
                 Text = "This is user 1 todo 2",
                 Created = DateTime.UtcNow,
                 User = user1,
-                UserId = user1.Id
+                UserId = user1.Id,
+                Version = 1
             },
         };
 
@@ -64,14 +60,16 @@ public class TodoProviderTests : IClassFixture<DbFixture>
                 Text = "This is user 2 todo 1",
                 Created = DateTime.UtcNow,
                 User = user2,
-                UserId = user2.Id
+                UserId = user2.Id,
+                Version = 1
             },
             new()
             {
                 Text = "This is user 2 todo 2",
                 Created = DateTime.UtcNow,
                 User = user2,
-                UserId = user2.Id
+                UserId = user2.Id,
+                Version = 1
             },
         };
 

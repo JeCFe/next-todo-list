@@ -48,6 +48,41 @@
           }
         }
       }
+    },
+    "/todo/delete": {
+      "post": {
+        "tags": [
+          "Todo"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteTodoItemCommand"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -64,6 +99,24 @@
             "nullable": true
           },
           "tags": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "DeleteTodoItemCommand": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "nullable": true
+          },
+          "created": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "version": {
             "type": "string",
             "nullable": true
           }

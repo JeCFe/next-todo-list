@@ -31,11 +31,12 @@ public class CreateTodoItemCommand : ICommand
                     new()
                     {
                         Text = Text,
-                        Colour = Colour,
+                        Colour = Colour ?? "white",
                         Tags = Tags,
                         Created = DateTime.UtcNow,
                         User = existingUser,
-                        UserId = existingUser.Id
+                        UserId = existingUser.Id,
+                        Version = 1,
                     }
                 );
         }
@@ -49,11 +50,12 @@ public class CreateTodoItemCommand : ICommand
                     new Todo
                     {
                         Text = Text,
-                        Colour = Colour,
+                        Colour = Colour ?? "white",
                         Tags = Tags,
-                        Created = new DateTime(),
+                        Created = DateTime.UtcNow,
                         User = newUser,
-                        UserId = newUser.Id
+                        UserId = newUser.Id,
+                        Version = 1
                     }
                 );
         }

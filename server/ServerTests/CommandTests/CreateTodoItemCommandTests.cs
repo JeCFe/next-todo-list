@@ -1,9 +1,5 @@
-﻿using System.Drawing;
-using Bogus;
-using MediatR;
-using Microsoft.Identity.Client;
+﻿using Bogus;
 using Moq;
-using Server;
 using Server.Commands;
 using Server.Context;
 using ServerTests.Fixtures;
