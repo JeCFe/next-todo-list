@@ -71,7 +71,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="flex w-full flex-col space-y-4 border border-black rounded-xl p-4">
+        <div className="flex w-full h-fit flex-col space-y-4 border border-black rounded-xl p-4">
           {data.map((todo, index) => (
             <div
               key={index}
