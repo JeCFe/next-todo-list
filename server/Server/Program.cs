@@ -18,7 +18,7 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
         IConfiguration configuration = new ConfigurationBuilder()
             .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-            .AddJsonFile("appsettings.development.json")
+            .AddJsonFile("appsettings.local.json", true)
             .Build();
 
         var dbConnectionString = configuration.GetConnectionString("db");

@@ -3,4 +3,4 @@
 *obj
 
 server/next-dotnet-auth0.sln.DotSettings.user
-server/Server/appsettings.development.json
+server/Server/appsettings.local.json
