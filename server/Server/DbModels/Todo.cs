@@ -8,7 +8,7 @@ public record Todo
 
     public int Version { get; set; }
     public required User User { get; init; }
-    public string? Colour { get; init; }
+    public string? Colour { get; init; } //make a scaler of this so I can type the data correctly
     public string? Tags { get; init; } // Todo will need to be an array but that will require additional models
 
     public DateTime? Closed { get; private set; }

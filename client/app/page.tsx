@@ -87,7 +87,7 @@ export default function Home() {
             sortedTodos.map((todo, index) => (
               <div
                 key={index}
-                className="flex items-center space-x-4 border rounded-xl border-grey-600 p-4"
+                className={`flex items-center space-x-4 border rounded-xl border-black p-4 bg-${todo.colour}-100`}
               >
                 <div className="flex flex-col">
                   {index !== 0 && <ArrowUp />}
