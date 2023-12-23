@@ -2,15 +2,32 @@
 
 import { useGetTodos } from "@/hooks/useGetTodos";
 import { getApiClient } from "@/services";
+import { VariantProps, cva } from "class-variance-authority";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 const issue = getApiClient().path("/todo/add").method("post").create();
-type ColourOptions = "red" | "green" | "blue" | "yellow" | "white";
+
+const colourVariance = cva("", {
+  variants: {
+    colour: {
+      red: "bg-red-100 hover:bg-red-300",
+      green: "bg-green-100 hover:bg-green-300",
+      blue: "bg-blue-100 hover:bg-blue-300",
+      yellow: "bg-yellow-100 hover:bg-yellow-300",
+      white: "bg-white-100 hover:bg-gray-300",
+    },
+  },
+  defaultVariants: {
+    colour: "white",
+  },
+});
+
 type Inputs = {
   text: string;
-  colour: ColourOptions;
-};
+} & VariantProps<typeof colourVariance>;
+
+type ColourOptions = "red" | "green" | "blue" | "yellow" | "white"; // Not keen on this, trying to find a way to tie this to cva
 
 export const AddItem = () => {
   const colourOptions: ColourOptions[] = [
@@ -41,6 +58,7 @@ export const AddItem = () => {
     mutate();
     reset();
   };
+
   return (
     <div className="border border-black rounded-xl p-2 w-full">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-2">
@@ -48,9 +66,11 @@ export const AddItem = () => {
           <textarea
             {...register("text", { required: true })}
             placeholder="Enter your todo..."
-            className={`flex border min-h-[2lh] resize-vertical border-black rounded-xl p-2 space-y-2 w-full bg-${
-              watch().colour
-            }-100`}
+            className={colourVariance({
+              colour: watch().colour,
+              className:
+                "flex border min-h-[2lh] resize-vertical border-black rounded-xl p-2 space-y-2 w-full",
+            })}
           />
 
           <button
@@ -76,7 +96,11 @@ export const AddItem = () => {
                     type="radio"
                     value={colour}
                     key={colour}
-                    className={`appearance-none flex flex-col border border-black rounded-xl w-8 h-8 bg-${colour}-100 hover:bg-${colour}-300 focus:ring-red-300 focus:ring-2 transition duration-300 ease-in-out`}
+                    className={colourVariance({
+                      colour,
+                      className:
+                        "appearance-none flex flex-col border border-black rounded-xl w-8 h-8 focus:ring-red-300 focus:ring-2 transition duration-300 ease-in-out",
+                    })}
                   />
                 ))}
               </div>
