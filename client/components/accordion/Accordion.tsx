@@ -9,15 +9,6 @@ type Props = {
 };
 export function Accordion({ openTitle, closeTitle, children }: Props) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [height, setHeight] = useState<number | undefined>(undefined);
-
-  const contentRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (contentRef.current) {
-      setHeight(isOpen ? contentRef.current.scrollHeight : 0);
-    }
-  }, [isOpen]);
 
   const toggleAccordion = () => {
     setIsOpen(!isOpen);
@@ -32,12 +23,11 @@ export function Accordion({ openTitle, closeTitle, children }: Props) {
         {!isOpen ? openTitle : closeTitle}
       </div>
       <div
-        className={`transition-max-height ease-out-in duration-200 overflow-hidden ${
-          isOpen ? "max-h-full" : "max-h-0"
+        className={`transition-max-height ease-in-out duration-300 overflow-hidden ${
+          isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
         }`}
-        style={{ maxHeight: `${height}px` }}
       >
-        <div ref={contentRef}>{children}</div>
+        <div>{children}</div>
       </div>
     </div>
   );
