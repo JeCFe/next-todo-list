@@ -10,6 +10,7 @@ import {
   FilterOptions,
 } from "@/components";
 import { SetStateAction, useMemo, useState } from "react";
+import Accordion from "@/components/accordion/Accordion";
 
 export type Filter = {
   colours?: string[];
@@ -50,6 +51,9 @@ export default function Home() {
   if (todoLoading || data === undefined) return <div>Loading...</div>;
   return (
     <div className="container mx-auto space-y-2">
+      <Accordion openTitle="Hi" closeTitle="Bye">
+        test
+      </Accordion>
       <AddItem />
       <div className="flex flex-col md:flex-row md:space-x-2 space-y-2 md:space-y-0 ">
         <FilterOptions filterOn={data} filter={filter} setFilter={setFilter} />
@@ -82,22 +86,27 @@ export default function Home() {
                   )}
                 </div>
                 <div className="flex flex-row pt-2">
-                  <div className="w-full flex flex-col space-y-2 md:flex-row md:space-y-0 divide-black">
-                    <div className="w-full md:w-1/2">
-                      <span className="w-fit">Created:</span>
-                      <span className="w-fit font-bold pl-2">
-                        {new Date(todo.created!).toLocaleString()}
-                      </span>
-                    </div>
-                    {todo.closed && (
+                  <Accordion
+                    openTitle="Show addional information"
+                    closeTitle="Hide additional information"
+                  >
+                    <div className="w-full flex flex-col space-y-2 md:flex-row md:space-y-0 divide-black">
                       <div className="w-full md:w-1/2">
-                        <span className="w-fit">Closed:</span>
+                        <span className="w-fit">Created:</span>
                         <span className="w-fit font-bold pl-2">
-                          {new Date(todo.closed).toLocaleString()}
+                          {new Date(todo.created!).toLocaleString()}
                         </span>
                       </div>
-                    )}
-                  </div>
+                      {todo.closed && (
+                        <div className="w-full md:w-1/2">
+                          <span className="w-fit">Closed:</span>
+                          <span className="w-fit font-bold pl-2">
+                            {new Date(todo.closed).toLocaleString()}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  </Accordion>
                 </div>
               </div>
             ))
