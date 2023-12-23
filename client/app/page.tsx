@@ -2,15 +2,8 @@
 import { useGetTodos } from "@/hooks/useGetTodos";
 
 import { getApiClient } from "../services";
-import {
-  ArrowDown,
-  ArrowUp,
-  Delete,
-  AddItem,
-  FilterOptions,
-} from "@/components";
-import { SetStateAction, useMemo, useState } from "react";
-import Accordion from "@/components/accordion/Accordion";
+import { Delete, FilterOptions, Accordion, AddItem } from "@/components";
+import { useMemo, useState } from "react";
 
 export type Filter = {
   colours?: string[];
@@ -20,6 +13,7 @@ export type Filter = {
 
 const deleteTodo = getApiClient().path("/todo/delete").method("post").create();
 
+// Perhaps need an unauthoised page
 export default function Home() {
   const { data, isLoading: todoLoading, mutate } = useGetTodos();
   const [filter, setFilter] = useState<Filter>({

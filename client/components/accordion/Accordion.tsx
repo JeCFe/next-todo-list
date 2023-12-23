@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect, ReactNode } from "react";
+import React, { useState, ReactNode } from "react";
 
 type Props = {
   openTitle: ReactNode | ReactNode[];
