@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { UserProvider } from "@auth0/nextjs-auth0/client";
+import { UserProvider, useUser } from "@auth0/nextjs-auth0/client";
 import { Footer, Header } from "@/components";
 
 export const metadata: Metadata = {
@@ -16,7 +16,7 @@ export default function RootLayout({
     <html lang="en">
       <UserProvider>
         <body className="flex flex-col min-h-screen bg-white font-mono">
-          <Header />
+          <Header title="JeCFe - Todo List" />
           <div className="flex-1">{children}</div>
           <Footer />
         </body>
