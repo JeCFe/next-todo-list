@@ -3,7 +3,6 @@
 import { useGetTodos } from "@/hooks/useGetTodos";
 import { getApiClient } from "@/services";
 import { VariantProps, cva } from "class-variance-authority";
-import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Accordion } from "..";
 
