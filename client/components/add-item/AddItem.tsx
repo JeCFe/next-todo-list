@@ -5,6 +5,7 @@ import { getApiClient } from "@/services";
 import { VariantProps, cva } from "class-variance-authority";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { Accordion } from "..";
 
 const issue = getApiClient().path("/todo/add").method("post").create();
 
@@ -39,7 +40,6 @@ export const AddItem = () => {
   ];
 
   const { mutate } = useGetTodos();
-  const [showAdvanced, setShowAdvanced] = useState<boolean>(false);
   const {
     register,
     handleSubmit,
@@ -85,7 +85,10 @@ export const AddItem = () => {
           {errors.text && "Todo text is required"}
         </div>
 
-        {showAdvanced && (
+        <Accordion
+          openTitle="Show advanced options"
+          closeTitle="Hide advanced options"
+        >
           <div className="flex flex-row">
             <div className="flex flex-col space-y-2 sm:space-x-2 sm:space-y-0 sm:flex-row item-center justify-center">
               <div className="flex items-center">Colour:</div>
@@ -106,13 +109,7 @@ export const AddItem = () => {
               </div>
             </div>
           </div>
-        )}
-        <div
-          className="w-fit underline underline-offset-4 text-blue-500 hover:text-blue-900 transition duration-200 ease-in-out cursor-pointer"
-          onClick={() => setShowAdvanced(!showAdvanced)}
-        >
-          {!showAdvanced ? "Show advanced options" : "Hide advanced options"}
-        </div>
+        </Accordion>
       </form>
     </div>
   );
