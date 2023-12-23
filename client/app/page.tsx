@@ -51,9 +51,6 @@ export default function Home() {
   if (todoLoading || data === undefined) return <div>Loading...</div>;
   return (
     <div className="container mx-auto space-y-2">
-      <Accordion openTitle="Hi" closeTitle="Bye">
-        test
-      </Accordion>
       <AddItem />
       <div className="flex flex-col md:flex-row md:space-x-2 space-y-2 md:space-y-0 ">
         <FilterOptions filterOn={data} filter={filter} setFilter={setFilter} />
