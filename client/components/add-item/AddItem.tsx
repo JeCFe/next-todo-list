@@ -70,7 +70,7 @@ export const AddItem = () => {
             <div className="flex flex-col space-y-2 sm:space-x-2 sm:space-y-0 sm:flex-row item-center justify-center">
               <div className="flex items-center">Colour:</div>
               <div className="flex flex-row space-x-2">
-                {colourOptions.map((colour, index) => (
+                {colourOptions.map((colour) => (
                   <input
                     {...register("colour")}
                     type="radio"
