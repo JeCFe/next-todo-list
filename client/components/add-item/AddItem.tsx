@@ -108,7 +108,7 @@ export const AddItem = () => {
           </div>
         )}
         <div
-          className="underline underline-offset-4 text-blue-500 hover:text-blue-900 transition duration-200 ease-in-out cursor-pointer"
+          className="w-fit underline underline-offset-4 text-blue-500 hover:text-blue-900 transition duration-200 ease-in-out cursor-pointer"
           onClick={() => setShowAdvanced(!showAdvanced)}
         >
           {!showAdvanced ? "Show advanced options" : "Hide advanced options"}
