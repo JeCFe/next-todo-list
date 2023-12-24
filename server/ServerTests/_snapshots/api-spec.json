@@ -88,6 +88,9 @@
   "components": {
     "schemas": {
       "CreateTodoItemCommand": {
+        "required": [
+          "text"
+        ],
         "type": "object",
         "properties": {
           "text": {
@@ -95,17 +98,20 @@
             "nullable": true
           },
           "colour": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "tags": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           }
         },
         "additionalProperties": false
       },
       "DeleteTodoItemCommand": {
+        "required": [
+          "created",
+          "text",
+          "version"
+        ],
         "type": "object",
         "properties": {
           "text": {
@@ -124,6 +130,11 @@
         "additionalProperties": false
       },
       "TodoItem": {
+        "required": [
+          "created",
+          "text",
+          "version"
+        ],
         "type": "object",
         "properties": {
           "text": {
@@ -135,12 +146,10 @@
             "nullable": true
           },
           "colour": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "tags": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "created": {
             "type": "string",
@@ -148,8 +157,7 @@
           },
           "closed": {
             "type": "string",
-            "format": "date-time",
-            "nullable": true
+            "format": "date-time"
           }
         },
         "additionalProperties": false

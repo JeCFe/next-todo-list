@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Server.Commands;
 using Server.Context;
+using Server.filters;
 using Server.Routes;
 
 public class Program
@@ -54,6 +55,7 @@ public class Program
                     "v1",
                     new OpenApiInfo { Version = "0.1.0", Title = "Backend Service" }
                 );
+                options.SchemaFilter<NullabilityFilter>();
                 options.AddSecurityDefinition(
                     "Bearer",
                     new OpenApiSecurityScheme
