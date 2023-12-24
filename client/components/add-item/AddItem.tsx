@@ -5,29 +5,15 @@ import { getApiClient } from "@/services";
 import { VariantProps, cva } from "class-variance-authority";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Accordion } from "..";
+import { colourVariance } from "@/app/cva";
 
 const issue = getApiClient().path("/todo/add").method("post").create();
-
-const colourVariance = cva("", {
-  variants: {
-    colour: {
-      red: "bg-red-100 hover:bg-red-300",
-      green: "bg-green-100 hover:bg-green-300",
-      blue: "bg-blue-100 hover:bg-blue-300",
-      yellow: "bg-yellow-100 hover:bg-yellow-300",
-      white: "bg-white-100 hover:bg-gray-300",
-    },
-  },
-  defaultVariants: {
-    colour: "white",
-  },
-});
 
 type Inputs = {
   text: string;
 } & VariantProps<typeof colourVariance>;
 
-type ColourOptions = "red" | "green" | "blue" | "yellow" | "white"; // Not keen on this, trying to find a way to tie this to cva
+export type ColourOptions = "red" | "green" | "blue" | "yellow" | "white"; // Not keen on this, trying to find a way to tie this to cva
 
 export const AddItem = () => {
   const colourOptions: ColourOptions[] = [
@@ -54,7 +40,7 @@ export const AddItem = () => {
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     console.log(data);
-    await issue({ text: data.text, colour: data.colour });
+    await issue({ text: data.text, colour: data.colour as ColourOptions });
     mutate();
     reset();
   };
@@ -68,6 +54,9 @@ export const AddItem = () => {
             placeholder="Enter your todo..."
             className={colourVariance({
               colour: watch().colour,
+              hover: watch().colour,
+              transition: true,
+
               className:
                 "flex border min-h-[2lh] resize-vertical border-black rounded-xl p-2 space-y-2 w-full",
             })}
@@ -100,7 +89,9 @@ export const AddItem = () => {
                     value={colour}
                     key={colour}
                     className={colourVariance({
-                      colour,
+                      colour: colour,
+                      hover: colour,
+                      transition: true,
                       className:
                         "appearance-none flex flex-col border border-black rounded-xl w-8 h-8 focus:ring-red-300 focus:ring-2 transition duration-300 ease-in-out",
                     })}
