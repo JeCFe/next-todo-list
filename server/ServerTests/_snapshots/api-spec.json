@@ -131,6 +131,7 @@
       },
       "TodoItem": {
         "required": [
+          "colour",
           "created",
           "text",
           "version"
@@ -146,7 +147,8 @@
             "nullable": true
           },
           "colour": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "tags": {
             "type": "string"
