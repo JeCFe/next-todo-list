@@ -5,7 +5,7 @@ import { getApiClient } from "@/services";
 import { VariantProps, cva } from "class-variance-authority";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Accordion } from "..";
-import { colourVariance } from "@/app/cva";
+import { colourVariance } from "@/cva";
 
 const issue = getApiClient().path("/todo/add").method("post").create();
 

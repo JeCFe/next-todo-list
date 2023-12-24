@@ -1,4 +1,4 @@
-import { colourVariance } from "@/app/cva";
+import { colourVariance } from "@/cva";
 import { TodoItem } from "@/types/server";
 import { Accordion, ColourOptions, Delete } from "..";
 import { getApiClient } from "@/services";
