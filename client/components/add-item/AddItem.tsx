@@ -4,7 +4,7 @@ import { useGetTodos } from "@/hooks/useGetTodos";
 import { getApiClient } from "@/services";
 import { VariantProps, cva } from "class-variance-authority";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { Accordion } from "..";
+import { Accordion, Button } from "..";
 
 const issue = getApiClient().path("/todo/add").method("post").create();
 
@@ -89,12 +89,16 @@ export const AddItem = () => {
             })}
           />
 
-          <button
-            type="submit"
-            className="flex border border-black rounded-xl p-2 space-y-2 w-1/2 md:w-1/5 h-16 items-center justify-center bg-pink-100 hover:bg-pink-200 focus:ring-red-300 focus:ring-2 transition duration-300 ease-in-out"
-          >
-            Add
-          </button>
+          <div className="w-1/2 md:w-1/5 h-16">
+            <Button
+              type="submit"
+              size="unbound"
+              variant="primary"
+              className="px-4 py-2 text-lg"
+            >
+              Add
+            </Button>
+          </div>
         </div>
 
         <div className="flex flex-row text-red-500 text-bold text-lg">
