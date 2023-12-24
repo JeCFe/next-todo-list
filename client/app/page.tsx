@@ -85,7 +85,7 @@ export default function Home() {
                       <div className="w-full md:w-1/2">
                         <span className="w-fit">Created:</span>
                         <span className="w-fit font-bold pl-2">
-                          {new Date(todo.created!).toLocaleString()}
+                          {new Date(todo.created).toLocaleString()}
                         </span>
                       </div>
                       {todo.closed && (

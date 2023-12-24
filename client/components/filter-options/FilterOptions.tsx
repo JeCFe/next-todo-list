@@ -1,11 +1,11 @@
 import { ChangeEvent, Dispatch, SetStateAction, useMemo } from "react";
-import { Checkbox, RadioButton } from "..";
+import { Checkbox } from "..";
 import { Filter } from "@/app/page";
 
 type Props = {
   filterOn: {
-    colour?: string | null | undefined;
-    tags?: string | null | undefined;
+    colour: string | null;
+    tags?: string;
   }[];
   filter: Filter;
   setFilter: Dispatch<SetStateAction<Filter>>;
@@ -16,11 +16,8 @@ export function FilterOptions({ filterOn, filter, setFilter }: Props) {
     const filteredTags = filterOn
       .map((todo) => todo.tags)
       .filter((tag): tag is string => tag !== null && tag !== undefined);
-    const filteredColours = filterOn
-      .map((todo) => todo.colour)
-      .filter(
-        (colour): colour is string => colour !== null && colour !== undefined
-      );
+    const filteredColours = filterOn.map((todo) => todo.colour);
+
     return {
       colours: [...new Set(filteredColours)],
       tags: [...new Set(filteredTags)],
@@ -54,7 +51,7 @@ export function FilterOptions({ filterOn, filter, setFilter }: Props) {
     setFilter(currentFilter);
   };
 
-  const setShowClosed = (event: ChangeEvent<HTMLInputElement>) => {
+  const setShowClosed = () => {
     const currentFilter: Filter = { ...filter };
 
     currentFilter.showClosed = !currentFilter.showClosed;
