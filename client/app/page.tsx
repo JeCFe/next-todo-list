@@ -1,7 +1,6 @@
 "use client";
 import { useGetTodos } from "@/hooks/useGetTodos";
 
-import { getApiClient } from "../services";
 import { FilterOptions, AddItem } from "@/components";
 import { useMemo, useState } from "react";
 import { TodoItem } from "@/components/todo-item/TodoItem";
@@ -20,6 +19,7 @@ export default function Home() {
     tags: [],
     showClosed: false,
   });
+  const [sort, setSort] = useState<"Asc" | "Dsc">("Dsc");
 
   const filteredTodos = useMemo(() => {
     return data?.filter(
@@ -36,17 +36,33 @@ export default function Home() {
     if (filteredTodos === undefined) {
       return undefined;
     }
-    return filteredTodos.sort(
-      (a, b) => new Date(a.created!).getTime() - new Date(b.created!).getTime()
-    );
-  }, [filteredTodos]);
+    switch (sort) {
+      case "Asc":
+        return filteredTodos.sort(
+          (a, b) =>
+            new Date(b.created!).getTime() - new Date(a.created!).getTime()
+        );
+      case "Dsc":
+        return filteredTodos.sort(
+          (a, b) =>
+            new Date(a.created!).getTime() - new Date(b.created!).getTime()
+        );
+      default:
+        return filteredTodos;
+    }
+  }, [filteredTodos, sort]);
 
   if (todoLoading || data === undefined) return <div>Loading...</div>;
   return (
     <div className="container mx-auto space-y-2">
       <AddItem />
       <div className="flex flex-col md:flex-row md:space-x-2 space-y-2 md:space-y-0 ">
-        <FilterOptions filterOn={data} filter={filter} setFilter={setFilter} />
+        <FilterOptions
+          filterOn={data}
+          filter={filter}
+          setFilter={setFilter}
+          setSort={setSort}
+        />
 
         <div className="flex w-full h-fit flex-col space-y-4 border border-black rounded-xl p-4">
           {sortedTodos === undefined || sortedTodos.length === 0 ? (

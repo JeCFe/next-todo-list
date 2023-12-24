@@ -1,5 +1,5 @@
 import { ChangeEvent, Dispatch, SetStateAction, useMemo } from "react";
-import { Checkbox } from "..";
+import { Checkbox, RadioButton } from "..";
 import { Filter } from "@/app/page";
 
 type Props = {
@@ -9,9 +9,10 @@ type Props = {
   }[];
   filter: Filter;
   setFilter: Dispatch<SetStateAction<Filter>>;
+  setSort: Dispatch<SetStateAction<"Asc" | "Dsc">>;
 };
 
-export function FilterOptions({ filterOn, filter, setFilter }: Props) {
+export function FilterOptions({ filterOn, filter, setFilter, setSort }: Props) {
   const filterOptions = useMemo(() => {
     const filteredTags = filterOn
       .map((todo) => todo.tags)
@@ -98,7 +99,16 @@ export function FilterOptions({ filterOn, filter, setFilter }: Props) {
         </div>
         <div className="flex flex-col border border-black rounded-xl p-2 space-y-2 w-1/2 md:w-fit">
           <h2 className="text-lg">Sort</h2>
-          Sorry nothing to show
+          <RadioButton name="sort" onClick={() => setSort("Asc")}>
+            Ascending
+          </RadioButton>
+          <RadioButton
+            name="sort"
+            defaultChecked={true}
+            onClick={() => setSort("Dsc")}
+          >
+            Descending
+          </RadioButton>
         </div>
       </div>
     );
