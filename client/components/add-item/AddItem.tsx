@@ -1,10 +1,10 @@
-"use client"; // Move the advanced options to their over client side state or intergrate with react hook forms
+"use client";
 
+import { Accordion, Button } from "..";
 import { useGetTodos } from "@/hooks/useGetTodos";
 import { getApiClient } from "@/services";
 import { VariantProps, cva } from "class-variance-authority";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { Accordion, Button } from "..";
 
 const issue = getApiClient().path("/todo/add").method("post").create();
 
@@ -41,16 +41,15 @@ type Inputs = {
 } & VariantProps<typeof colourVariance>;
 
 export type ColourOptions = "red" | "green" | "blue" | "yellow" | "white"; // Not keen on this, trying to find a way to tie this to cva
+const colourOptions: ColourOptions[] = [
+  "red",
+  "green",
+  "blue",
+  "yellow",
+  "white",
+];
 
 export const AddItem = () => {
-  const colourOptions: ColourOptions[] = [
-    "red",
-    "green",
-    "blue",
-    "yellow",
-    "white",
-  ];
-
   const { mutate } = useGetTodos();
 
   const {

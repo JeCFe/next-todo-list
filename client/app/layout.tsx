@@ -15,7 +15,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <UserProvider>
-        <body className="flex flex-col min-h-screen bg-white font-mono">
+        <body className="flex flex-col min-h-screen bg-white font-mono container mx-auto">
           <Header title="JeCFe - Todo List" />
           <div className="flex-1">{children}</div>
           <Footer />

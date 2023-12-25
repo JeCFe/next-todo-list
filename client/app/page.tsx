@@ -4,6 +4,8 @@ import { useGetTodos } from "@/hooks/useGetTodos";
 import { FilterOptions, AddItem } from "@/components";
 import { useMemo, useState } from "react";
 import { TodoItem } from "@/components/todo-item/TodoItem";
+import { Spinner } from "@/components/spinner";
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 export type Filter = {
   colours?: string[];
@@ -11,9 +13,9 @@ export type Filter = {
   showClosed: boolean;
 };
 
-// Perhaps need an unauthoised page
 export default function Home() {
   const { data, isLoading: todoLoading } = useGetTodos();
+  const { user, isLoading } = useUser();
   const [filter, setFilter] = useState<Filter>({
     colours: [],
     tags: [],
@@ -52,9 +54,13 @@ export default function Home() {
     }
   }, [filteredTodos, sort]);
 
-  if (todoLoading || data === undefined) return <div>Loading...</div>;
+  if (todoLoading || data === undefined || isLoading)
+    return <Spinner fast={todoLoading} size="large" />;
+  if (!isLoading && !user) {
+    return <div>Please log in</div>;
+  }
   return (
-    <div className="container mx-auto space-y-2">
+    <div className="space-y-2">
       <AddItem />
       <div className="flex flex-col md:flex-row md:space-x-2 space-y-2 md:space-y-0 ">
         <FilterOptions

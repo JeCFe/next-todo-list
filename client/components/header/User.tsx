@@ -1,12 +1,13 @@
 "use client";
 import { useUser } from "@auth0/nextjs-auth0/client";
+import { Spinner } from "../spinner";
 
 export function User() {
   const { user, isLoading } = useUser();
   return (
     <div>
       {isLoading ? (
-        <div>Loading... {/*Change with spinner comp*/}</div>
+        <Spinner fast={isLoading} size="small" />
       ) : (
         <div>
           {user ? (
