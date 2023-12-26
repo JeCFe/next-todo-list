@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import "./globals.css";
+import "@jecfe/react-design-system/src/tailwind.css";
 import { UserProvider, useUser } from "@auth0/nextjs-auth0/client";
 import { Footer, Header } from "@/components";
 
@@ -15,9 +15,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <UserProvider>
-        <body className="flex flex-col min-h-screen bg-white font-mono container mx-auto">
+        <body className="flex flex-col min-h-screen bg-white font-mono">
           <Header title="JeCFe - Todo List" />
-          <div className="flex-1">{children}</div>
+          <div className="flex-1 container mx-auto">{children}</div>
           <Footer />
         </body>
       </UserProvider>

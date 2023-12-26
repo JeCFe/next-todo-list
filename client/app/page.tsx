@@ -1,11 +1,11 @@
 "use client";
 import { useGetTodos } from "@/hooks/useGetTodos";
-
 import { FilterOptions, AddItem } from "@/components";
 import { useMemo, useState } from "react";
 import { TodoItem } from "@/components/todo-item/TodoItem";
-import { Spinner } from "@/components/spinner";
+
 import { useUser } from "@auth0/nextjs-auth0/client";
+import { Spinner } from "@/components/spinner";
 
 export type Filter = {
   colours?: string[];
